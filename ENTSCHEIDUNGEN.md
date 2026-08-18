@@ -1,0 +1,26 @@
+# Entscheidungen — esp32-puddledish-rust
+
+- **2026-08-18 — Name.** `esp32-puddledish-rust/` (C: `../esp32-puddledish-c3/`). Johannes-Clone bleibt `../johannes-fluidbox/`.
+- **2026-08-17 — Eigenes Thema.** C-Firmware und `orb-rust` nicht anfassen.
+- **2026-08-17 — Stack.** Wie `orb-rust`: esp-hal 1.1 + Embassy + QSPI-DMA-Bänder. Flash mit `espflash`, nicht `idf.py`.
+- **2026-08-17 — Board.** 1.75-B 466×466. Johannes-1.8-Pins (GPIO11 = PCLK dort) nie 1:1.
+- **2026-08-17 — Schicht 1.** Kreuz+Ring aus C-`pattern.c`: Mitte 232.5, r=232.5, Kreuz bis an den Ring. Nicht den PLAN-Draft (233 / Ring 220).
+- **2026-08-17 — Feel später.** Zahlen aus User-OK / C-`config.h`. Nicht „verbessern“.
+- **2026-08-17 — Kein Git.** Workspace oft ohne Repo; nicht `git init`.
+- **2026-08-17 — Schicht 1 ok.** User: sieht gut aus.
+- **2026-08-17 — Schicht 2.** Stehendes Kreisgitter, 900, Renderer 1:1 aus C. FOCAL 100, r=7.2, DIM 0.32, Highlight an, 90° CW. Kein Solver.
+- **2026-08-17 — Schicht 2 ok.** User: ja.
+- **2026-08-17 — Schicht 3.** Solver = C `native/sim.c` (`-O2 -ffast-math`), nicht der langsame Rust-Port. ~29 steps/s. TIME 0.068 ohne IMU kocht (12-Lagen-Haufen) — dasselbe wie C. C-Ruhe war 0.048, 0.068 erst mit IMU.
+- **2026-08-17 — Schicht 3 Popcorn.** User: Tempo besser, zu viel Popcorn. TIME 0.048 wie C-Schicht-3-Ruhe. 0.068 zurück mit IMU.
+- **2026-08-17 — Schicht 3 besser.** User: spritzt noch aber besser. Schicht 4: IMU+PWR, TIME wieder 0.068.
+- **2026-08-17 — Schicht 4 unruhig/langsam.** User: sieht gut aus, noch unruhig und langsam. DMA-Overlap (37→61 fps). IMU-Rauschen unter 0.3 m/s² / 0.05 rad/s weg. Nicht 90-fps-Jagd.
+- **2026-08-17 — Immer noch sehr unruhig.** Hold-Still: Shake < 1.5 m/s² und Gyro < 0.20 rad/s = nur Gravitation. TIME/SHAKE_GAIN unverändert. Nicht die geparkte Flach-Deadzone.
+- **2026-08-17 — Nicht Zittern.** User: grundsätzlich immer Bewegung, Spritzer nach oben. Hold-Still-Gate zurück. Gyro/omega/alpha aus. TIME 0.048, Restitution 0.08, Jitter 0.12 — Pfütze soll nicht mehr nach oben springen.
+- **2026-08-17 — Glas-Kochen, nicht C-Knöpfe.** Host-Harness: C-Solver kommt bei konstanter +Y nie zur Ruhe (speed ~350, C-Knöpfe ~720). 900@16 in 75px-Tiefe.
+- **2026-08-17 — VEL_DAMP 0.75 + 2×Relax zurück.** User: brutal langsam und verbuggt. Damp 0.75 bei ~33 steps/s ist Honig, 2. Relax ohne neue Dichte verbiegt. Zurück: 1 Relax, kein Damp, TIME 0.068, Restitution 0.08, Jitter 0.12.
+- **2026-08-17 — Popcorn, Fluid sonst ok.** User: sieht gut aus, noch popcorn. Nur Glas: Restitution 0, Jitter 0. TIME 0.068, kein Damp, 1 Relax.
+- **2026-08-17 — Immer Bewegung.** User hat recht: Host-Solver kocht ohne IMU.
+- **2026-08-17 — Rest/Live zwei Szenen.** User: schaltet zwischen 2 Szenen. `rest`/v=0 weg. Ein Zustand. RELAX_VEL-Blend verworfen (Host: noch mehr Kochen).
+- **2026-08-17 — Popcorn seit Beginn.** Druck-Geschosse, nicht IMU. Ein Speed-Cap, skaliert mit Bewegung. Kein Rest-Modus, kein Damp.
+- **2026-08-17 — Cap 180+700: nichts springt, extrem langsam.** Floor 240, Gain 2600, Attack 0.55 / Decay 0.10, Gyro nur fürs Cap (nicht ins Sim).
+- **2026-08-17 — Rust-Port geparkt.** User: total verbuggt, abbrechen. C-Firmware (`esp32-puddledish-c3/firmware`) wieder auf dem Glas. **Irgendwann hier weiter:** Popcorn ist Druck-Geschosse (Host: C-Solver kommt nie zur Ruhe). Damp = Honig. Rest/Live = zwei Szenen. Activity-Cap = langsam oder Rauschen. Nächster Anlauf nicht an den Feel-Schaltern, sondern am Solver/Energie.

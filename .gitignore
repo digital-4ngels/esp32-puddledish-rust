@@ -1,0 +1,12 @@
+debug/
+target/
+*.exe
+
+.vscode/
+.zed/
+.helix/
+.nvim.lua
+
+**/*.rs.bk
+*.pdb
+**/.DS_Store
