@@ -1,6 +1,6 @@
 # ESP32 S3 Puddle Dish (Rust)
 
-> Demo video coming soon. Drop it at [`assets/hero.gif`](assets/hero.gif).
+<img src="assets/hero.gif" alt="Puddle Dish hero">
 
 A 3D particle fluid living inside a [Waveshare ESP32-S3-Touch-AMOLED-1.75-B](https://www.waveshare.com/esp32-s3-touch-amoled-1.75.htm) — round, 466×466. The screen is the front glass of a shallow dish. Tilt the board and the liquid pours to the rim; shake it and it sprays white.
 
@@ -56,7 +56,7 @@ BOOT GPIO0 untouched
 |---|---|
 | `src/` | Rust: display, render, IMU, button, main |
 | `native/` | FluidBox C solver (`sim.c`) plus thin host stubs |
-| `assets/` | Hero clip (add `hero.gif` when you have it) |
+| `assets/` | Hero clip (same as the C repo; this port is less settled) |
 
 ## Credits
 
